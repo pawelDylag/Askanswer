@@ -95,7 +95,7 @@ public class IntroActivity extends ListActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            RegisterBeacon.INSTANCE.request("73299465", "Marian");
+            RegisterBeacon.INSTANCE.request("442023991", "Marian");
             new GetBeacon().request("442023991");
 
             List<String> answers = new ArrayList<String>();
@@ -106,7 +106,7 @@ public class IntroActivity extends ListActivity {
             AskQuestion.INSTANCE.request("442023991", 1, endtime, "Q?", answers);
 
             SubmitAnswer.INSTANCE.request("442023991", "b");
-            CurrentQuestion.INSTANCE.request("442023991");
+           // CurrentQuestion.INSTANCE.request("442023991");
             return true;
         }
         return super.onOptionsItemSelected(item);

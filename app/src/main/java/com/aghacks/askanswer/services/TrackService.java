@@ -15,6 +15,7 @@ import com.aghacks.askanswer.http.GetBeacon;
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.Region;
+import com.estimote.sdk.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,7 +57,9 @@ public class TrackService extends Service {
                         currentBeacons = beacons;
                         for (Beacon beacon : beacons) {
                             String key = beacon.getMajor() + "" + beacon.getMinor();
-                            new GetBeacon().request(key);
+                            if(!nameMap.containsKey(key) && Utils.computeAccuracy(beacon) < 3) {
+                                new GetBeacon().request(key);
+                            }
                         }
                         Iterator it = nameMap.entrySet().iterator();
                         while (it.hasNext()) {

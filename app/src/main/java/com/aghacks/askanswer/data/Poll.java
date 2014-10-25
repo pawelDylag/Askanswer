@@ -1,5 +1,9 @@
 package com.aghacks.askanswer.data;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -13,6 +17,7 @@ public class Poll implements Serializable{
     private ArrayList<String> answers;
     private long length;
     private long launchedAt;
+    private String id;
     private boolean done;
 
     public Poll (String q, ArrayList<String> a, int l, int la) {
@@ -20,6 +25,23 @@ public class Poll implements Serializable{
         this.answers = a;
         this.length = l;
         this.launchedAt = la;
+    }
+
+    public Poll (JSONObject json) {
+        try {
+            this.question = json.getString("question_str");
+            JSONArray jsonAnswers = json.getJSONArray("question_answers");
+            ArrayList<String> answers = new ArrayList<String>();
+            for (int i = 0; i < jsonAnswers.length(); i++) {
+                answers.add(jsonAnswers.get(i).toString());
+            }
+            this.answers = answers;
+            this.length = 30000;
+            this.launchedAt = 0;
+            this.done = false;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getQuestion() {

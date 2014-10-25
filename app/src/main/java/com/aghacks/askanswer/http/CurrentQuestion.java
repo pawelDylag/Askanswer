@@ -28,7 +28,15 @@ public class CurrentQuestion extends HttpRequestorAbs {
         Log.i("CurrentQuestion", response);
         Intent intent = new Intent("new-poll");
         intent.putExtra("message", response);
-        LocalBroadcastManager.getInstance(App.getObj()).sendBroadcast(intent);
+        try {
+            JSONObject json = new JSONObject(response);
+            if (json.getBoolean("question_asked") == true) {
+                LocalBroadcastManager.getInstance(App.getObj()).sendBroadcast(intent);
+            }
+        } catch ( JSONException e) {
+            e.printStackTrace();
+        }
+
 //        {
 //            "question_answers": {
 //              "a": 0,
