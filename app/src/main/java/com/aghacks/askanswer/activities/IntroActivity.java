@@ -1,17 +1,13 @@
 package com.aghacks.askanswer.activities;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.ListActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 
 import com.aghacks.askanswer.R;
+import com.aghacks.askanswer.http.HttpRequestorAbs;
 
 import java.util.ArrayList;
 
@@ -25,9 +21,9 @@ public class IntroActivity extends ListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
+        String[] values = new String[]{"Android", "iPhone", "WindowsMobile",
                 "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-                "Linux", "OS/2" };
+                "Linux", "OS/2"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, values);
         setListAdapter(adapter);
@@ -48,6 +44,7 @@ public class IntroActivity extends ListActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            HttpRequestorAbs.registerBeacon(1, "Tester");
             return true;
         }
         return super.onOptionsItemSelected(item);
