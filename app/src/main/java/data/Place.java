@@ -15,6 +15,12 @@ public class Place {
         this.major = 0;
     }
 
+    public Place (String name, int mi, int maj) {
+        this.name = name;
+        this.minor = mi;
+        this.major = maj;
+    }
+
     public String getName() {
         return name;
     }

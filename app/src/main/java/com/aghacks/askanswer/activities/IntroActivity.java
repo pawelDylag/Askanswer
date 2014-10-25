@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.app.ListActivity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -26,12 +27,18 @@ import data.UserData;
 public class IntroActivity extends ListActivity {
 
     private ArrayList<Place> places;
-    ArrayAdapter<String> adapter;
+    private ArrayAdapter<String> adapter;
+    private UserData userData;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         places = new ArrayList<Place>();
+        if (getIntent().hasExtra("userData")) {
+            userData = (UserData) getIntent().getSerializableExtra("userData");
+        } else userData = new UserData();
+
         // debug:
         places.add(new Place("Pan Mariusz"));
         places.add(new Place("Matematyka dyskretna wyklad"));
@@ -44,17 +51,16 @@ public class IntroActivity extends ListActivity {
         adapter  = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, placeLabel);
         setListAdapter(adapter);
-
     }
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         String item = (String) getListAdapter().getItem(position);
-        UserData newData = App.getUserData();
+
         // TODO: tu nalezy zmienic na pobieranie place z tablicy
-        newData.changeMonitoredPlace(new Place(item));
-        App.setUserData(newData);
+        userData.changeMonitoredPlace(new Place(item));
         Intent intent = new Intent(this.getApplicationContext(), MainActivity.class);
+        intent.putExtra("userData", userData);
         startActivity(intent);
         finish();
     }
