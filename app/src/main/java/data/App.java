@@ -7,6 +7,19 @@ import android.app.Application;
  */
 public class App extends Application {
 
+    private static UserData userData;
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        userData = new UserData();
+    }
 
+    public static UserData getUserData() {
+        return userData;
+    }
+
+    public static void setUserData(UserData n) {
+        userData = n;
+    }
 }

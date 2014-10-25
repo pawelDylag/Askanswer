@@ -9,6 +9,12 @@ public class Place {
     private int minor;
     private int major;
 
+    public Place (String name) {
+        this.name = name;
+        this.minor = 0;
+        this.major = 0;
+    }
+
     public String getName() {
         return name;
     }
