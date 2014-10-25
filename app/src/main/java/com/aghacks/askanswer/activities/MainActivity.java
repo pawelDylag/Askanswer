@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.aghacks.askanswer.R;
 
+import com.aghacks.askanswer.adapters.PlaceAdapter;
 import com.aghacks.askanswer.adapters.PollViewAdapter;
 import com.aghacks.askanswer.data.Place;
 import com.aghacks.askanswer.data.Poll;

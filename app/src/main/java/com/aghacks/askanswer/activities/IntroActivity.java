@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.aghacks.askanswer.R;
+import com.aghacks.askanswer.adapters.PlaceAdapter;
 import com.aghacks.askanswer.http.AskQuestion;
 import com.aghacks.askanswer.http.CurrentQuestion;
 import com.aghacks.askanswer.http.GetBeacon;
@@ -31,7 +32,7 @@ import com.aghacks.askanswer.data.UserData;
 public class IntroActivity extends ListActivity {
 
 
-    public static ArrayAdapter<String> adapter;
+    public static ArrayAdapter<Place> adapter;
     private UserData userData;
 
 
@@ -46,18 +47,18 @@ public class IntroActivity extends ListActivity {
         getApplicationContext().startService(trackIntent);
 
 
-        adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, TrackService.placeLabel);
+        adapter = new PlaceAdapter(this,
+                R.layout.place_layout, TrackService.places);
         setListAdapter(adapter);
 
 
     }
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        String item = (String) getListAdapter().getItem(position);
+        Place item = (Place) getListAdapter().getItem(position);
 
         // TODO: tu nalezy zmienic na pobieranie place z tablicy
-        userData.changeMonitoredPlace(new Place(item));
+        userData.changeMonitoredPlace(item);
         Intent intent = new Intent(this.getApplicationContext(), MainActivity.class);
         intent.putExtra("userData", userData);
         startActivity(intent);
