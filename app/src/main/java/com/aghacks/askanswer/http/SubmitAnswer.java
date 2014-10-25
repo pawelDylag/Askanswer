@@ -8,7 +8,7 @@ import org.json.JSONObject;
 public class SubmitAnswer extends HttpRequestorAbs{
     public static SubmitAnswer INSTANCE = new SubmitAnswer();
 
-    public void request(int id, String answer_id) {
+    public void request(String id, String answer_id) {
         String url = BASE_URL+"submit_answer/";
         JSONObject parameters = new JSONObject();
         try {

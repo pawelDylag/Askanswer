@@ -47,6 +47,7 @@ public class TrackService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.i(TAG, "TrackService: Create ranging service");
+        beaconManager.setBackgroundScanPeriod(2500, 2500);
         beaconManager.setRangingListener(new BeaconManager.RangingListener() {
             @Override
             public void onBeaconsDiscovered(Region region, final List<Beacon> beacons) {

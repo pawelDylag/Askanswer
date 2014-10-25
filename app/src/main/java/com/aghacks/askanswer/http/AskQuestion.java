@@ -11,7 +11,7 @@ import java.util.List;
 public class AskQuestion extends HttpRequestorAbs {
     public static AskQuestion INSTANCE = new AskQuestion();
 
-    public void request(int id, int pid, long endtime, String question, List<String> answersList) {
+    public void request(String id, int pid, long endtime, String question, List<String> answersList) {
         String url = BASE_URL+"ask_question/";
         JSONObject parameters = new JSONObject();
         JSONArray answers = new JSONArray();
