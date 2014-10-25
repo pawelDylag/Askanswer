@@ -7,9 +7,15 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 
 import com.aghacks.askanswer.R;
+import com.aghacks.askanswer.http.AskQuestion;
+import com.aghacks.askanswer.http.CurrentQuestion;
+import com.aghacks.askanswer.http.GetBeacon;
 import com.aghacks.askanswer.http.HttpRequestorAbs;
+import com.aghacks.askanswer.http.RegisterBeacon;
+import com.aghacks.askanswer.http.SubmitAnswer;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import data.Place;
 
@@ -44,7 +50,18 @@ public class IntroActivity extends ListActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            HttpRequestorAbs.registerBeacon(1, "Tester");
+            RegisterBeacon.INSTANCE.request(1, "Tester");
+            GetBeacon.INSTANCE.request(1);
+
+            List<String> answers = new ArrayList<String>();
+            answers.add("a");
+            answers.add("b");
+            answers.add("c");
+            long endtime = System.currentTimeMillis() - 1000 * 60;
+            AskQuestion.INSTANCE.request(1, 1, endtime, "Q?", answers);
+
+            SubmitAnswer.INSTANCE.request(1, "b");
+            CurrentQuestion.INSTANCE.request(1);
             return true;
         }
         return super.onOptionsItemSelected(item);

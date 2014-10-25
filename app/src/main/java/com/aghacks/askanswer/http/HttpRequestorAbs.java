@@ -16,8 +16,11 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class HttpRequestorAbs {
-    private static void getResponse(final String url, final JSONObject parameters) {
+public abstract class HttpRequestorAbs {
+
+    protected static final String BASE_URL = "http://104.131.177.52:80/";
+
+    protected void getResponse(final String url, final JSONObject parameters) {
         new AsyncTask<Void, Void, HttpResponse>() {
             @Override
             protected HttpResponse doInBackground(final Void... params) {
@@ -25,7 +28,9 @@ public class HttpRequestorAbs {
                 HttpPost httpost = new HttpPost(url);
                 StringEntity se = null;
                 try {
-                    se = new StringEntity(parameters.toString());
+                    String msgToSend = parameters.toString();
+                    se = new StringEntity(msgToSend);
+                    Log.i("Sending:", msgToSend);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
@@ -45,7 +50,7 @@ public class HttpRequestorAbs {
                 HttpEntity entity = httpResponse.getEntity();
                 try {
                     String resp = EntityUtils.toString(entity);
-                    Log.i("Request Test", "Response: " + resp);
+                    processResponse(resp);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -53,18 +58,5 @@ public class HttpRequestorAbs {
         }.execute();
     }
 
-    public static String registerBeacon(int id, String name) {
-        String url = "http://104.131.177.52:80/register_beacon/";
-        JSONObject parameters = new JSONObject();
-        try {
-            parameters.put("id", id);
-            parameters.put("name", name);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        Log.i("Request Test", "Address: " + url);
-        Log.i("Request Test", "Request: " + parameters.toString());
-        getResponse(url, parameters);
-        return "";
-    }
+    public abstract void processResponse(String response);
 }
