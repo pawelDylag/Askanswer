@@ -10,8 +10,16 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.aghacks.askanswer.R;
+import com.aghacks.askanswer.http.AskQuestion;
+import com.aghacks.askanswer.http.CurrentQuestion;
+import com.aghacks.askanswer.http.GetBeacon;
+import com.aghacks.askanswer.http.HttpRequestorAbs;
+import com.aghacks.askanswer.http.RegisterBeacon;
+import com.aghacks.askanswer.http.SubmitAnswer;
+import com.aghacks.askanswer.services.TrackService;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.aghacks.askanswer.data.Place;
 import com.aghacks.askanswer.data.UserData;
@@ -46,6 +54,8 @@ public class IntroActivity extends ListActivity {
         setListAdapter(adapter);
     }
 
+        Intent trackIntent = new Intent(getApplicationContext(), TrackService.class);
+        getApplicationContext().startService(trackIntent);
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         String item = (String) getListAdapter().getItem(position);
@@ -72,6 +82,18 @@ public class IntroActivity extends ListActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            RegisterBeacon.INSTANCE.request(1, "Tester");
+            new GetBeacon().request("1");
+
+            List<String> answers = new ArrayList<String>();
+            answers.add("a");
+            answers.add("b");
+            answers.add("c");
+            long endtime = System.currentTimeMillis() - 1000 * 60;
+            AskQuestion.INSTANCE.request(1, 1, endtime, "Q?", answers);
+
+            SubmitAnswer.INSTANCE.request(1, "b");
+            CurrentQuestion.INSTANCE.request(1);
             return true;
         }
         return super.onOptionsItemSelected(item);
