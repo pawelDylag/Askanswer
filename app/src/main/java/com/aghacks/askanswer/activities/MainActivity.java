@@ -27,7 +27,12 @@ import com.aghacks.askanswer.data.Place;
 import com.aghacks.askanswer.data.Poll;
 import com.aghacks.askanswer.data.UserData;
 import com.aghacks.askanswer.http.AskQuestion;
+import com.aghacks.askanswer.http.SubmitAnswer;
 import com.aghacks.askanswer.services.PollService;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,19 +62,6 @@ public class MainActivity extends Activity {
         getApplicationContext().startService(pollIntent);
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
                 new IntentFilter("new-poll"));
-        // DEBUG
-        Thread timer = new Thread() {
-            public void run(){
-                try {
-                    sleep(5000);
-                    createPoll();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        };
-        timer.start();
     }
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
@@ -77,6 +69,14 @@ public class MainActivity extends Activity {
         public void onReceive(Context context, Intent intent) {
             String message = intent.getStringExtra("message");
             Log.e("OMG", message);
+            Poll newPoll = null;
+            try {
+                JSONObject json = new JSONObject(message);
+                newPoll = new Poll(json);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+                showNewPoll(newPoll);
         }
     };
 
@@ -127,6 +127,7 @@ public class MainActivity extends Activity {
     public static class PollDialogFragment extends Fragment {
 
         private PollDialogFragment thisFragment;
+        private String id;
         private Poll poll;
         private ListView listView;
         private ArrayAdapter<String> adapter;
@@ -136,11 +137,19 @@ public class MainActivity extends Activity {
         }
 
         @Override
+        public void onSaveInstanceState(Bundle outState) {
+            //No call for super(). Bug on API Level > 11.
+        }
+
+        @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             if (getArguments().containsKey("poll")) {
                 poll = (Poll) getArguments().get("poll");
             } else poll = null;
+            if (getArguments().containsKey("id")) {
+               id = (String) getArguments().get("id");
+            } else id = null;
             answersCache = new boolean [poll.getAnswersNumber()];
             thisFragment = this;
         }
@@ -168,7 +177,7 @@ public class MainActivity extends Activity {
                         view.findViewById(R.id.answer_row).setBackgroundColor(getResources().getColor(R.color.green));
                     } else {
                         // TODO: uzupełnić 2 pierwsze dane
-                        AskQuestion.INSTANCE.request("442023991", 1, poll.getLaunchedAt()+poll.getLength(), poll.getQuestion(), poll.getAnswers());
+                        SubmitAnswer.INSTANCE.request(id, poll.getAnswers().get(i));
                         Toast.makeText(getActivity(), "Answer sent: " + i, Toast.LENGTH_SHORT).show();
                         getActivity().getFragmentManager().beginTransaction().remove(thisFragment).commit();
                     }
@@ -194,9 +203,10 @@ public class MainActivity extends Activity {
         pollFragment = new PollDialogFragment();
         Bundle b = new Bundle();
         b.putSerializable("poll", p);
+        b.putString("id", userData.getMonitoredPlace().getId());
         pollFragment.setArguments(b);
         getFragmentManager().beginTransaction()
-                .add(R.id.container, pollFragment).commit();
+                .add(R.id.container, pollFragment).commitAllowingStateLoss();
     }
 
     public void dismissPoll() {
