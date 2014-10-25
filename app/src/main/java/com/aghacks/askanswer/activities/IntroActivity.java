@@ -102,7 +102,7 @@ public class IntroActivity extends ListActivity {
             answers.add("a");
             answers.add("b");
             answers.add("c");
-            long endtime = System.currentTimeMillis() + 1000 * 60;
+            long endtime = System.currentTimeMillis() + 1000 * 30;
             AskQuestion.INSTANCE.request("442023991", 1, endtime, "Q?", answers);
 
             SubmitAnswer.INSTANCE.request("442023991", "b");
