@@ -9,28 +9,32 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.aghacks.askanswer.R;
 
-import data.Place;
-import data.UserData;
+import com.aghacks.askanswer.adapters.PollViewAdapter;
+import com.aghacks.askanswer.data.Place;
+import com.aghacks.askanswer.data.Poll;
+import com.aghacks.askanswer.data.UserData;
+
+import java.util.ArrayList;
 
 public class MainActivity extends Activity {
 
     private UserData userData;
-
+    Fragment pollFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         userData = (UserData) getIntent().getSerializableExtra("userData");
-        if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.container, new PollDialogFragment())
-                    .commit();
-        }
+
         TextView label = (TextView) findViewById(R.id.label);
         label.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,8 +43,29 @@ public class MainActivity extends Activity {
             }
         });
         label.setText("Current session: " + userData.getMonitoredPlace().getName());
+        // DEBUG
+        Thread timer = new Thread() {
+            public void run(){
+                try {
+                    ArrayList<String> s = new ArrayList<String>();
+                    s.add("First answer.");
+                    s.add("Second answer.");
+                    Poll p = new Poll("Test poll", s, 30, 300  );
+                    sleep(5000);
+                    showNewPoll(p);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+        timer.start();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -62,17 +87,49 @@ public class MainActivity extends Activity {
     }
 
     /**
-     * A placeholder fragment containing a simple view.
+     * A placeholder fragment containing poll dialog.
      */
     public static class PollDialogFragment extends Fragment {
 
-        public PollDialogFragment() {
+        private Poll poll;
+        private ListView listView;
+        private ArrayAdapter<String> adapter;
+        private boolean[] answersCache;
+
+        public PollDialogFragment () {}
+
+        public PollDialogFragment(Poll p) {
+            this.poll = p;
+            answersCache = new boolean[p.getAnswersNumber()];
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            listView = (ListView) rootView.findViewById(R.id.answersListView);
+            adapter = new PollViewAdapter(getActivity(), R.layout.poll_answer, poll.getAnswers());
+            listView.setAdapter(adapter);
+            listView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Toast.makeText(getActivity(), "Answer Clicked: " + i, Toast.LENGTH_SHORT).show();
+                    if (answersCache[i] != true) {
+                        for (int j = 0; j< answersCache.length; j++) {
+                            if ( answersCache[j] == true) {
+                                answersCache[j] = false;
+                                View x = listView.getChildAt(j);
+                                x.findViewById(R.id.answer_row).setBackgroundColor(getResources().getColor(R.color.background));
+                            }
+                        }
+                        answersCache[i] = true;
+                        view.findViewById(R.id.answer_row).setBackgroundColor(getResources().getColor(R.color.green));
+                    } else {
+                        // TODO: SEND POLL TO SERVER
+                        Toast.makeText(getActivity(), "Answer sent: " + i, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
             return rootView;
         }
     }
@@ -86,8 +143,13 @@ public class MainActivity extends Activity {
         finish();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+    public void showNewPoll(Poll p) {
+        pollFragment = new PollDialogFragment(p);
+        getFragmentManager().beginTransaction()
+                .add(R.id.container, pollFragment).commit();
+    }
+
+    public void dismissPoll() {
+        getFragmentManager().beginTransaction().hide(pollFragment).commit();
     }
 }

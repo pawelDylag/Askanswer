@@ -1,6 +1,4 @@
-package data;
-
-import android.content.SharedPreferences;
+package com.aghacks.askanswer.data;
 
 import java.io.Serializable;
 

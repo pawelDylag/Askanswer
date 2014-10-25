@@ -1,4 +1,4 @@
-package data;
+package com.aghacks.askanswer.data;
 
 /**
  * Created by paweldylag on 25/10/14.

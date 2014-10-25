@@ -1,27 +1,20 @@
 package com.aghacks.askanswer.activities;
 
-import android.app.ActionBar;
-import android.app.Activity;
-import android.app.Application;
 import android.app.ListActivity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 
 import com.aghacks.askanswer.R;
 
 import java.util.ArrayList;
 
-import data.App;
-import data.Place;
-import data.UserData;
+import com.aghacks.askanswer.data.Place;
+import com.aghacks.askanswer.data.UserData;
 
 
 public class IntroActivity extends ListActivity {
