@@ -3,6 +3,11 @@
     package="com.aghacks.askanswer" >
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
         android:allowBackup="true"
@@ -19,17 +24,11 @@
 
             </intent-filter>
         </activity>
+
+        <service android:name="com.estimote.sdk.service.BeaconService"
+            android:exported="false"/>
+
+        <service android:name="com.aghacks.askanswer.services.TrackService"
+            android:exported="false"/>
     </application>
-
-    <service android:name="com.estimote.sdk.service.BeaconService"
-        android:exported="false"/>
-
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-
-
 </manifest>

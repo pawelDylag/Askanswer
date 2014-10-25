@@ -1,7 +1,9 @@
 package com.aghacks.askanswer.activities;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -13,6 +15,7 @@ import com.aghacks.askanswer.http.GetBeacon;
 import com.aghacks.askanswer.http.HttpRequestorAbs;
 import com.aghacks.askanswer.http.RegisterBeacon;
 import com.aghacks.askanswer.http.SubmitAnswer;
+import com.aghacks.askanswer.services.TrackService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +37,8 @@ public class IntroActivity extends ListActivity {
                 android.R.layout.simple_list_item_1, values);
         setListAdapter(adapter);
 
+        Intent trackIntent = new Intent(getApplicationContext(), TrackService.class);
+        getApplicationContext().startService(trackIntent);
     }
 
     @Override
@@ -51,7 +56,7 @@ public class IntroActivity extends ListActivity {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             RegisterBeacon.INSTANCE.request(1, "Tester");
-            GetBeacon.INSTANCE.request(1);
+            new GetBeacon().request("1");
 
             List<String> answers = new ArrayList<String>();
             answers.add("a");

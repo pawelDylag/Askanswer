@@ -3,6 +3,8 @@ package com.aghacks.askanswer.http;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.aghacks.askanswer.Settings;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -18,7 +20,7 @@ import java.io.UnsupportedEncodingException;
 
 public abstract class HttpRequestorAbs {
 
-    protected static final String BASE_URL = "http://104.131.177.52:80/";
+    protected static final String BASE_URL = Settings.SERVER_ADDRESS;
 
     protected void getResponse(final String url, final JSONObject parameters) {
         new AsyncTask<Void, Void, HttpResponse>() {
