@@ -9,6 +9,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.aghacks.askanswer.Settings;
+import com.aghacks.askanswer.activities.IntroActivity;
+import com.aghacks.askanswer.data.Place;
 import com.aghacks.askanswer.http.GetBeacon;
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
@@ -16,8 +18,11 @@ import com.estimote.sdk.Region;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class TrackService extends Service {
     private static final String TAG = TrackService.class.getSimpleName();
@@ -25,6 +30,8 @@ public class TrackService extends Service {
     private static final Region ALL_ESTIMOTE_BEACONS = new Region("regionId", Settings.PROXIMITY_UUID, null, null);
     private static List<Beacon> currentBeacons = new ArrayList<Beacon>();
     public static Map<String, String> nameMap = new HashMap<String, String>();
+    public static ArrayList<String> placeLabel = new ArrayList<String>();
+    public static ArrayList<Place> places = new ArrayList<Place>();
     private final BeaconManager beaconManager = new BeaconManager(this);
     private final Handler handler = new Handler();
 
@@ -47,8 +54,25 @@ public class TrackService extends Service {
                     public void run() {
                         currentBeacons = beacons;
                         for (Beacon beacon : beacons) {
-                            new GetBeacon().request(beacon.getMajor() + "" + beacon.getMinor());
+                            String key = beacon.getMajor() + "" + beacon.getMinor();
+                            new GetBeacon().request(key);
                         }
+
+                        places.clear();
+                        Iterator it = nameMap.entrySet().iterator();
+                        while (it.hasNext()) {
+                            Map.Entry pairs = (Map.Entry)it.next();
+                            places.add(new Place((String)pairs.getValue(), (String)pairs.getKey()));
+                            it.remove(); // avoids a ConcurrentModificationException
+                        }
+
+                        placeLabel.clear();
+                        for (Place place : places) {
+                            String s = place.getName();
+                            placeLabel.add(s);
+                        }
+
+                        IntroActivity.adapter.notifyDataSetChanged();
                     }
                 });
             }

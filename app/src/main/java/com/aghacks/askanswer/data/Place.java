@@ -6,18 +6,38 @@ package com.aghacks.askanswer.data;
 public class Place {
 
     private String name;
-    private int id;
+    private String id;
 
 
     public Place (String name) {
         this.name = name;
-        this.id = 0;
+        this.id = "";
     }
 
-    public Place (String name, int mi) {
+    public Place (String name, String mi) {
         this.name = name;
         this.id = mi;
 
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Place place = (Place) o;
+
+        if (id != null ? !id.equals(place.id) : place.id != null) return false;
+        if (name != null ? !name.equals(place.name) : place.name != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (id != null ? id.hashCode() : 0);
+        return result;
     }
 
     public String getName() {
@@ -28,11 +48,11 @@ public class Place {
         this.name = name;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
