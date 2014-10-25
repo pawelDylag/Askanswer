@@ -20,7 +20,9 @@ import com.aghacks.askanswer.services.TrackService;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.aghacks.askanswer.data.Place;
 import com.aghacks.askanswer.data.UserData;
@@ -28,29 +30,24 @@ import com.aghacks.askanswer.data.UserData;
 
 public class IntroActivity extends ListActivity {
 
-    private ArrayList<Place> places;
-    private ArrayAdapter<String> adapter;
+
+    public static ArrayAdapter<String> adapter;
     private UserData userData;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        places = new ArrayList<Place>();
+
         if (getIntent().hasExtra("userData")) {
             userData = (UserData) getIntent().getSerializableExtra("userData");
         } else userData = new UserData();
         Intent trackIntent = new Intent(getApplicationContext(), TrackService.class);
         getApplicationContext().startService(trackIntent);
 
-        Collection<String> values = TrackService.nameMap.values();
-        ArrayList<String> placeLabel = new ArrayList<String>();
-        for (Place x : places) {
-            String s = x.getName();
-            placeLabel.add(s);
-        }
+
         adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, placeLabel);
+                android.R.layout.simple_list_item_1, TrackService.placeLabel);
         setListAdapter(adapter);
 
 
@@ -81,8 +78,8 @@ public class IntroActivity extends ListActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            RegisterBeacon.INSTANCE.request(1, "Tester");
-            new GetBeacon().request("1");
+            //RegisterBeacon.INSTANCE.request("442023991", "Janusz Tester");
+            new GetBeacon().request("442023991");
 
             List<String> answers = new ArrayList<String>();
             answers.add("a");

@@ -8,7 +8,7 @@ import org.json.JSONObject;
 public class RegisterBeacon extends HttpRequestorAbs{
     public static RegisterBeacon INSTANCE = new RegisterBeacon();
 
-    public void request(int id, String name) {
+    public void request(String id, String name) {
         String url = BASE_URL+"register_beacon/";
         JSONObject parameters = new JSONObject();
         try {

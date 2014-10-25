@@ -146,7 +146,7 @@ public class MainActivity extends Activity {
 
 
     public void returnToIntroActivity() {
-        userData.changeMonitoredPlace(new Place(null, 0 ));
+        userData.changeMonitoredPlace(new Place(null, ""));
         Intent intent = new Intent(this.getApplicationContext(), IntroActivity.class);
         intent.putExtra("userData", userData);
         startActivity(intent);

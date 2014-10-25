@@ -9,11 +9,11 @@ public class UserData implements Serializable{
 
     // monitored place -> aktualnie otwarta sesja do nasluchiwania
     private String monitoredPlaceName;
-    private int monitoredId;
+    private String monitoredId;
     private boolean askMode;
 
     public UserData () {
-        monitoredId = 0;
+        monitoredId = "";
         monitoredPlaceName = null;
         askMode = false;
     }
