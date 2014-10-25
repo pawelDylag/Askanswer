@@ -20,7 +20,7 @@ public class Poll implements Serializable{
     private String id;
     private boolean done;
 
-    public Poll (String q, ArrayList<String> a, int l, int la) {
+    public Poll (String q, ArrayList<String> a, long l, int la) {
         this.question = q;
         this.answers = a;
         this.length = l;

@@ -1,5 +1,6 @@
 package com.aghacks.askanswer.activities;
 
+import android.app.DialogFragment;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.widget.ListView;
 
 import com.aghacks.askanswer.R;
 import com.aghacks.askanswer.adapters.PlaceAdapter;
+import com.aghacks.askanswer.fragments.SendPollDialog;
 import com.aghacks.askanswer.http.AskQuestion;
 import com.aghacks.askanswer.http.CurrentQuestion;
 import com.aghacks.askanswer.http.GetBeacon;
@@ -95,19 +97,11 @@ public class IntroActivity extends ListActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            RegisterBeacon.INSTANCE.request("442023991", "Marian");
-            new GetBeacon().request("442023991");
-
-            List<String> answers = new ArrayList<String>();
-            answers.add("a");
-            answers.add("b");
-            answers.add("c");
-            long endtime = System.currentTimeMillis() + 1000 * 30;
-            AskQuestion.INSTANCE.request("442023991", 1, endtime, "Q?", answers);
-
-            SubmitAnswer.INSTANCE.request("442023991", "b");
-           // CurrentQuestion.INSTANCE.request("442023991");
-            return true;
+            userData.changeAskMode(true);
+            Intent intent = new Intent(this.getApplicationContext(), PollActivity.class);
+            intent.putExtra("userData", userData);
+            startActivity(intent);
+            finish();
         }
         return super.onOptionsItemSelected(item);
     }
