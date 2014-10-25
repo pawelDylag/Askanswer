@@ -19,6 +19,7 @@ import com.aghacks.askanswer.http.SubmitAnswer;
 import com.aghacks.askanswer.services.TrackService;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.aghacks.askanswer.data.Place;
@@ -39,23 +40,21 @@ public class IntroActivity extends ListActivity {
         if (getIntent().hasExtra("userData")) {
             userData = (UserData) getIntent().getSerializableExtra("userData");
         } else userData = new UserData();
+        Intent trackIntent = new Intent(getApplicationContext(), TrackService.class);
+        getApplicationContext().startService(trackIntent);
 
-        // debug:
-        places.add(new Place("Pan Mariusz"));
-        places.add(new Place("Matematyka dyskretna wyklad"));
-        //
-        ArrayList <String> placeLabel = new ArrayList<String>();
-        for(Place x: places) {
+        Collection<String> values = TrackService.nameMap.values();
+        ArrayList<String> placeLabel = new ArrayList<String>();
+        for (Place x : places) {
             String s = x.getName();
             placeLabel.add(s);
         }
-        adapter  = new ArrayAdapter<String>(this,
+        adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, placeLabel);
         setListAdapter(adapter);
-    }
 
-        Intent trackIntent = new Intent(getApplicationContext(), TrackService.class);
-        getApplicationContext().startService(trackIntent);
+
+    }
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         String item = (String) getListAdapter().getItem(position);
