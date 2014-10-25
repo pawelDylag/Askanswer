@@ -1,19 +1,28 @@
-package com.aghacks.askanswer;
+package com.aghacks.askanswer.activities;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+
+import com.aghacks.askanswer.R;
 
 
 public class IntroActivity extends Activity {
+
+    private final String TAG = this.getLocalClassName();
+    private ActionBar actionbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
-    }
 
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -33,4 +42,6 @@ public class IntroActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }
