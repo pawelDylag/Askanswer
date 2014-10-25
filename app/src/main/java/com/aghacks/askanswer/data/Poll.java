@@ -11,8 +11,8 @@ public class Poll implements Serializable{
 
     private String question;
     private ArrayList<String> answers;
-    private int length;
-    private int launchedAt;
+    private long length;
+    private long launchedAt;
     private boolean done;
 
     public Poll (String q, ArrayList<String> a, int l, int la) {
@@ -30,19 +30,19 @@ public class Poll implements Serializable{
         this.question = question;
     }
 
-    public int getLength() {
+    public long getLength() {
         return length;
     }
 
-    public void setLength(int length) {
+    public void setLength(long length) {
         this.length = length;
     }
 
-    public int getLaunchedAt() {
+    public long getLaunchedAt() {
         return launchedAt;
     }
 
-    public void setLaunchedAt(int launchedAt) {
+    public void setLaunchedAt(long launchedAt) {
         this.launchedAt = launchedAt;
     }
 

@@ -22,8 +22,10 @@ import com.aghacks.askanswer.adapters.PollViewAdapter;
 import com.aghacks.askanswer.data.Place;
 import com.aghacks.askanswer.data.Poll;
 import com.aghacks.askanswer.data.UserData;
+import com.aghacks.askanswer.http.AskQuestion;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends Activity {
 
@@ -135,7 +137,8 @@ public class MainActivity extends Activity {
                         answersCache[i] = true;
                         view.findViewById(R.id.answer_row).setBackgroundColor(getResources().getColor(R.color.green));
                     } else {
-                        // TODO: SEND POLL TO SERVER
+                        // TODO: uzupełnić 2 pierwsze dane
+                        AskQuestion.INSTANCE.request("442023991", 1, poll.getLaunchedAt()+poll.getLength(), poll.getQuestion(), poll.getAnswers());
                         Toast.makeText(getActivity(), "Answer sent: " + i, Toast.LENGTH_SHORT).show();
                         getActivity().getFragmentManager().beginTransaction().remove(thisFragment).commit();
                     }
