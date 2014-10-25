@@ -58,19 +58,13 @@ public class TrackService extends Service {
                             String key = beacon.getMajor() + "" + beacon.getMinor();
                             new GetBeacon().request(key);
                         }
-
-                        places.clear();
                         Iterator it = nameMap.entrySet().iterator();
                         while (it.hasNext()) {
                             Map.Entry pairs = (Map.Entry)it.next();
-                            places.add(new Place((String)pairs.getValue(), (String)pairs.getKey()));
-                            it.remove(); // avoids a ConcurrentModificationException
-                        }
-
-                        placeLabel.clear();
-                        for (Place place : places) {
-                            String s = place.getName();
-                            placeLabel.add(s);
+                            Place newplace = new Place((String)pairs.getValue(), (String)pairs.getKey());
+                            if (!places.contains(newplace))
+                            places.add(newplace);
+                            it.remove();
                         }
 
                         IntroActivity.adapter.notifyDataSetChanged();

@@ -10,17 +10,22 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.aghacks.askanswer.R;
-import com.aghacks.askanswer.data.Place;
-import com.aghacks.askanswer.data.UserData;
 import com.aghacks.askanswer.http.AskQuestion;
 import com.aghacks.askanswer.http.CurrentQuestion;
 import com.aghacks.askanswer.http.GetBeacon;
+import com.aghacks.askanswer.http.HttpRequestorAbs;
 import com.aghacks.askanswer.http.RegisterBeacon;
 import com.aghacks.askanswer.http.SubmitAnswer;
 import com.aghacks.askanswer.services.TrackService;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
+import com.aghacks.askanswer.data.Place;
+import com.aghacks.askanswer.data.UserData;
 
 
 public class IntroActivity extends ListActivity {
@@ -51,19 +56,23 @@ public class IntroActivity extends ListActivity {
             userData = (UserData) getIntent().getSerializableExtra("userData");
         } else userData = new UserData();
 
-        adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, TrackService.placeLabel);
+        ListView lv = getListView();
+        LayoutInflater inflater = getLayoutInflater();
+        View header = inflater.inflate(R.layout.header, lv, false);
+        lv.addHeaderView(header, null, false);
+
+        adapter = new PlaceAdapter(this,
+                R.layout.place_layout, TrackService.places);
         setListAdapter(adapter);
 
 
     }
-
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        String item = (String) getListAdapter().getItem(position);
+        Place item = (Place) getListAdapter().getItem(position-1);
 
         // TODO: tu nalezy zmienic na pobieranie place z tablicy
-        userData.changeMonitoredPlace(new Place(item));
+        userData.changeMonitoredPlace(item);
         Intent intent = new Intent(this.getApplicationContext(), MainActivity.class);
         intent.putExtra("userData", userData);
         startActivity(intent);
