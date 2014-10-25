@@ -1,0 +1,88 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.aghacks.askanswer.activities.PollActivity">
+    <TextView
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/mainColor"
+        android:textColor="@color/textWhite"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Set your name:" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:padding="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name:" />
+        <EditText
+            android:layout_width="match_parent"
+            android:padding="5dp"
+            android:id="@+id/editName"
+            android:layout_height="wrap_content" />
+
+        </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:padding="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Beacon:" />
+        <Spinner
+            android:id="@+id/beacon_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:padding="10dp"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:background="@color/mainColor"
+            android:textColor="@color/textWhite"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Your polls:"
+            android:gravity="left"/>
+        <Button
+            android:gravity="right"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:text="Add"
+            android:id="@+id/addButton"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+    android:padding="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/pollListView"
+            android:layout_gravity="center_horizontal" />
+
+    </LinearLayout>
+
+
+    </LinearLayout>

@@ -1,7 +1,13 @@
 package com.aghacks.askanswer.fragments;
 
 import android.app.DialogFragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +15,12 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.aghacks.askanswer.R;
+import com.aghacks.askanswer.data.App;
+import com.aghacks.askanswer.data.Poll;
 import com.aghacks.askanswer.http.AskQuestion;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +41,6 @@ public class SendPollDialog extends DialogFragment {
         return new SendPollDialog();
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -46,7 +56,7 @@ public class SendPollDialog extends DialogFragment {
         submit.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                List<String> answers = new ArrayList<String>();
+                ArrayList<String> answers = new ArrayList<String>();
                 if ( a.getText().length() != 0){
                     answers.add(a.getText().toString());
                 }
@@ -61,7 +71,10 @@ public class SendPollDialog extends DialogFragment {
                 }
 
                 long endtime = System.currentTimeMillis() + 1000 * 60;
-                AskQuestion.INSTANCE.request("442023991", 1, endtime, questionEdit.getText().toString(), answers);
+                Poll poll = new Poll(questionEdit.getText().toString(), answers, endtime, 0);
+                Intent intent = new Intent("poll");
+                intent.putExtra("poll", poll);
+                LocalBroadcastManager.getInstance(App.getObj()).sendBroadcast(intent);
                 getDialog().dismiss();
             }
         });
@@ -77,4 +90,6 @@ public class SendPollDialog extends DialogFragment {
 
         return view;
     }
+
+
 }

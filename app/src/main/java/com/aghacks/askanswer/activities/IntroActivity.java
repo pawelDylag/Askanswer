@@ -97,12 +97,11 @@ public class IntroActivity extends ListActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            RegisterBeacon.INSTANCE.request("442023991", "Marian");
-            new GetBeacon().request("442023991");
-            DialogFragment newFragment = SendPollDialog.newInstance();
-            newFragment.show(getFragmentManager(), "dialog");
-           // CurrentQuestion.INSTANCE.request("442023991");
-            return true;
+            userData.changeAskMode(true);
+            Intent intent = new Intent(this.getApplicationContext(), PollActivity.class);
+            intent.putExtra("userData", userData);
+            startActivity(intent);
+            finish();
         }
         return super.onOptionsItemSelected(item);
     }
