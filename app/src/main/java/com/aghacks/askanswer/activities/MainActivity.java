@@ -2,8 +2,13 @@ package com.aghacks.askanswer.activities;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +27,7 @@ import com.aghacks.askanswer.data.Place;
 import com.aghacks.askanswer.data.Poll;
 import com.aghacks.askanswer.data.UserData;
 import com.aghacks.askanswer.http.AskQuestion;
+import com.aghacks.askanswer.services.PollService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +36,7 @@ public class MainActivity extends Activity {
 
     private UserData userData;
     Fragment pollFragment;
+    private Intent pollIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,18 +52,17 @@ public class MainActivity extends Activity {
             }
         });
         label.setText("Current session: " + userData.getMonitoredPlace().getName());
+        pollIntent = new Intent(getApplicationContext(), PollService.class);
+        pollIntent.putExtra("id", userData.getMonitoredPlace().getId());
+        getApplicationContext().startService(pollIntent);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+                new IntentFilter("new-poll"));
         // DEBUG
         Thread timer = new Thread() {
             public void run(){
                 try {
-                    ArrayList<String> s = new ArrayList<String>();
-                    s.add("First answer.");
-                    s.add("Second answer.");
-                    s.add("Third answer.");
-                    s.add("Fourth answer.");
-                    Poll p = new Poll("Test poll", s, 30, 300  );
                     sleep(5000);
-                    showNewPoll(p);
+                    createPoll();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -64,6 +70,31 @@ public class MainActivity extends Activity {
             }
         };
         timer.start();
+    }
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            Log.e("OMG", message);
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        // Unregister since the activity is about to be closed.
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        super.onDestroy();
+    }
+
+    public void createPoll() throws InterruptedException {
+        ArrayList<String> s = new ArrayList<String>();
+        s.add("First answer.");
+        s.add("Second answer.");
+        s.add("Third answer.");
+        s.add("Fourth answer.");
+        Poll p = new Poll("Test poll", s, 30, 300  );
+        showNewPoll(p);
     }
 
     @Override
@@ -137,7 +168,7 @@ public class MainActivity extends Activity {
                         view.findViewById(R.id.answer_row).setBackgroundColor(getResources().getColor(R.color.green));
                     } else {
                         // TODO: uzupełnić 2 pierwsze dane
-                        AskQuestion.INSTANCE.request("442023991", 1, poll.getLaunchedAt()+poll.getLength(), poll.getQuestion(), poll.getAnswers());
+                        AskQuestion.INSTANCE.request("442023991", 1, poll.getLaunchedAt() + poll.getLength(), poll.getQuestion(), poll.getAnswers());
                         Toast.makeText(getActivity(), "Answer sent: " + i, Toast.LENGTH_SHORT).show();
                         getActivity().getFragmentManager().beginTransaction().remove(thisFragment).commit();
                     }

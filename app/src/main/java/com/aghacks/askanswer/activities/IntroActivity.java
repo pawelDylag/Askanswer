@@ -10,22 +10,17 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.aghacks.askanswer.R;
+import com.aghacks.askanswer.data.Place;
+import com.aghacks.askanswer.data.UserData;
 import com.aghacks.askanswer.http.AskQuestion;
 import com.aghacks.askanswer.http.CurrentQuestion;
 import com.aghacks.askanswer.http.GetBeacon;
-import com.aghacks.askanswer.http.HttpRequestorAbs;
 import com.aghacks.askanswer.http.RegisterBeacon;
 import com.aghacks.askanswer.http.SubmitAnswer;
 import com.aghacks.askanswer.services.TrackService;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-
-import com.aghacks.askanswer.data.Place;
-import com.aghacks.askanswer.data.UserData;
 
 
 public class IntroActivity extends ListActivity {
@@ -33,7 +28,20 @@ public class IntroActivity extends ListActivity {
 
     public static ArrayAdapter<String> adapter;
     private UserData userData;
+    private Intent trackIntent;
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        trackIntent = new Intent(getApplicationContext(), TrackService.class);
+        getApplicationContext().startService(trackIntent);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        getApplicationContext().stopService(trackIntent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +50,6 @@ public class IntroActivity extends ListActivity {
         if (getIntent().hasExtra("userData")) {
             userData = (UserData) getIntent().getSerializableExtra("userData");
         } else userData = new UserData();
-        Intent trackIntent = new Intent(getApplicationContext(), TrackService.class);
-        getApplicationContext().startService(trackIntent);
-
 
         adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, TrackService.placeLabel);
@@ -52,6 +57,7 @@ public class IntroActivity extends ListActivity {
 
 
     }
+
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         String item = (String) getListAdapter().getItem(position);

@@ -2,14 +2,19 @@ package com.aghacks.askanswer.data;
 
 import android.app.Application;
 
-/**
- * Created by paweldylag on 25/10/14.
- */
 public class App extends Application {
+    private static final String TAG = App.class.getSimpleName();
+
+    private static App obj;
+
+    public static App getObj() {
+        return obj;
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
-
+        obj = this;
     }
+
 }

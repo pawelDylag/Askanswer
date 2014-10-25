@@ -1,15 +1,19 @@
 package com.aghacks.askanswer.http;
 
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+
+import com.aghacks.askanswer.data.App;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class CurrentQuestion extends HttpRequestorAbs{
+public class CurrentQuestion extends HttpRequestorAbs {
     public static CurrentQuestion INSTANCE = new CurrentQuestion();
 
     public void request(String id) {
-        String url = BASE_URL+"current_question/";
+        String url = BASE_URL + "current_question/";
         JSONObject parameters = new JSONObject();
         try {
             parameters.put("id", id);
@@ -22,6 +26,9 @@ public class CurrentQuestion extends HttpRequestorAbs{
     @Override
     public void processResponse(String response) {
         Log.i("CurrentQuestion", response);
+        Intent intent = new Intent("new-poll");
+        intent.putExtra("message", response);
+        LocalBroadcastManager.getInstance(App.getObj()).sendBroadcast(intent);
 //        {
 //            "question_answers": {
 //              "a": 0,

@@ -33,5 +33,8 @@
 
         <service android:name="com.aghacks.askanswer.services.TrackService"
             android:exported="false"/>
+
+        <service android:name="com.aghacks.askanswer.services.PollService"
+            android:exported="false"/>
     </application>
 </manifest>
