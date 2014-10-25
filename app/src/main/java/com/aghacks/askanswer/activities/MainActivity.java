@@ -21,27 +21,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aghacks.askanswer.R;
-
 import com.aghacks.askanswer.adapters.PollViewAdapter;
 import com.aghacks.askanswer.data.Place;
 import com.aghacks.askanswer.data.Poll;
 import com.aghacks.askanswer.data.UserData;
-import com.aghacks.askanswer.http.AskQuestion;
 import com.aghacks.askanswer.http.SubmitAnswer;
 import com.aghacks.askanswer.services.PollService;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends Activity {
 
     private UserData userData;
     Fragment pollFragment;
     private Intent pollIntent;
+    private long blocktime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,16 +64,19 @@ public class MainActivity extends Activity {
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String message = intent.getStringExtra("message");
-            Log.e("OMG", message);
-            Poll newPoll = null;
-            try {
-                JSONObject json = new JSONObject(message);
-                newPoll = new Poll(json);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            if (System.currentTimeMillis() > blocktime) {
+                String message = intent.getStringExtra("message");
+                Log.e("OMG", message);
+                Poll newPoll = null;
+                try {
+                    JSONObject json = new JSONObject(message);
+                    newPoll = new Poll(json);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                blocktime = newPoll.getLaunchedAt()+newPoll.getLength();
                 showNewPoll(newPoll);
+            }
         }
     };
 
@@ -93,7 +93,7 @@ public class MainActivity extends Activity {
         s.add("Second answer.");
         s.add("Third answer.");
         s.add("Fourth answer.");
-        Poll p = new Poll("Test poll", s, 30, 300  );
+        Poll p = new Poll("Test poll", s, 30, 300);
         showNewPoll(p);
     }
 
@@ -133,7 +133,7 @@ public class MainActivity extends Activity {
         private ArrayAdapter<String> adapter;
         private boolean[] answersCache;
 
-        public PollDialogFragment () {
+        public PollDialogFragment() {
         }
 
         @Override
@@ -157,7 +157,7 @@ public class MainActivity extends Activity {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
+                                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             listView = (ListView) rootView.findViewById(R.id.answersListView);
             adapter = new PollViewAdapter(getActivity(), R.layout.poll_answer, poll.getAnswers());
@@ -176,7 +176,6 @@ public class MainActivity extends Activity {
                         answersCache[i] = true;
                         view.findViewById(R.id.answer_row).setBackgroundColor(getResources().getColor(R.color.green));
                     } else {
-                        // TODO: uzupełnić 2 pierwsze dane
                         SubmitAnswer.INSTANCE.request(id, poll.getAnswers().get(i));
                         Toast.makeText(getActivity(), "Answer sent: " + i, Toast.LENGTH_SHORT).show();
                         getActivity().getFragmentManager().beginTransaction().remove(thisFragment).commit();
