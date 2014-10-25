@@ -19,7 +19,6 @@ public class PollViewAdapter extends ArrayAdapter<String> {
 
     // declaring our ArrayList of items
     private ArrayList<String> answers;
-    private ArrayList<Boolean> answerCache;
 
     /* here we must override the constructor for ArrayAdapter
     * the only variable we care about now is ArrayList<Item> objects,

@@ -50,6 +50,8 @@ public class MainActivity extends Activity {
                     ArrayList<String> s = new ArrayList<String>();
                     s.add("First answer.");
                     s.add("Second answer.");
+                    s.add("Third answer.");
+                    s.add("Fourth answer.");
                     Poll p = new Poll("Test poll", s, 30, 300  );
                     sleep(5000);
                     showNewPoll(p);
@@ -91,17 +93,25 @@ public class MainActivity extends Activity {
      */
     public static class PollDialogFragment extends Fragment {
 
+        private PollDialogFragment thisFragment;
         private Poll poll;
         private ListView listView;
         private ArrayAdapter<String> adapter;
         private boolean[] answersCache;
 
-        public PollDialogFragment () {}
-
-        public PollDialogFragment(Poll p) {
-            this.poll = p;
-            answersCache = new boolean[p.getAnswersNumber()];
+        public PollDialogFragment () {
         }
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            if (getArguments().containsKey("poll")) {
+                poll = (Poll) getArguments().get("poll");
+            } else poll = null;
+            answersCache = new boolean [poll.getAnswersNumber()];
+            thisFragment = this;
+        }
+
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -110,13 +120,12 @@ public class MainActivity extends Activity {
             listView = (ListView) rootView.findViewById(R.id.answersListView);
             adapter = new PollViewAdapter(getActivity(), R.layout.poll_answer, poll.getAnswers());
             listView.setAdapter(adapter);
-            listView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    Toast.makeText(getActivity(), "Answer Clicked: " + i, Toast.LENGTH_SHORT).show();
                     if (answersCache[i] != true) {
-                        for (int j = 0; j< answersCache.length; j++) {
-                            if ( answersCache[j] == true) {
+                        for (int j = 0; j < answersCache.length; j++) {
+                            if (answersCache[j]) {
                                 answersCache[j] = false;
                                 View x = listView.getChildAt(j);
                                 x.findViewById(R.id.answer_row).setBackgroundColor(getResources().getColor(R.color.background));
@@ -127,6 +136,7 @@ public class MainActivity extends Activity {
                     } else {
                         // TODO: SEND POLL TO SERVER
                         Toast.makeText(getActivity(), "Answer sent: " + i, Toast.LENGTH_SHORT).show();
+                        getActivity().getFragmentManager().beginTransaction().remove(thisFragment).commit();
                     }
                 }
             });
@@ -136,7 +146,7 @@ public class MainActivity extends Activity {
 
 
     public void returnToIntroActivity() {
-        userData.changeMonitoredPlace(new Place(null, 0 , 0));
+        userData.changeMonitoredPlace(new Place(null, 0 ));
         Intent intent = new Intent(this.getApplicationContext(), IntroActivity.class);
         intent.putExtra("userData", userData);
         startActivity(intent);
@@ -144,7 +154,10 @@ public class MainActivity extends Activity {
     }
 
     public void showNewPoll(Poll p) {
-        pollFragment = new PollDialogFragment(p);
+        pollFragment = new PollDialogFragment();
+        Bundle b = new Bundle();
+        b.putSerializable("poll", p);
+        pollFragment.setArguments(b);
         getFragmentManager().beginTransaction()
                 .add(R.id.container, pollFragment).commit();
     }

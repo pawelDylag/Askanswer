@@ -6,19 +6,18 @@ package com.aghacks.askanswer.data;
 public class Place {
 
     private String name;
-    private int minor;
-    private int major;
+    private int id;
+
 
     public Place (String name) {
         this.name = name;
-        this.minor = 0;
-        this.major = 0;
+        this.id = 0;
     }
 
-    public Place (String name, int mi, int maj) {
+    public Place (String name, int mi) {
         this.name = name;
-        this.minor = mi;
-        this.major = maj;
+        this.id = mi;
+
     }
 
     public String getName() {
@@ -29,19 +28,13 @@ public class Place {
         this.name = name;
     }
 
-    public int getMinor() {
-        return minor;
+    public int getId() {
+        return id;
     }
 
-    public void setMinor(int minor) {
-        this.minor = minor;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public int getMajor() {
-        return major;
-    }
 
-    public void setMajor(int major) {
-        this.major = major;
-    }
 }

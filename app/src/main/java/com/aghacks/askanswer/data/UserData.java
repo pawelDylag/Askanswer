@@ -9,25 +9,22 @@ public class UserData implements Serializable{
 
     // monitored place -> aktualnie otwarta sesja do nasluchiwania
     private String monitoredPlaceName;
-    private int monitoredPlaceMinor;
-    private int monitoredPlaceMajor;
+    private int monitoredId;
     private boolean askMode;
 
     public UserData () {
-        monitoredPlaceMinor = 0;
-        monitoredPlaceMajor = 0;
+        monitoredId = 0;
         monitoredPlaceName = null;
         askMode = false;
     }
 
     public Place getMonitoredPlace () {
-        return new Place(monitoredPlaceName, monitoredPlaceMinor, monitoredPlaceMajor);
+        return new Place(monitoredPlaceName, monitoredId);
     }
 
     public void changeMonitoredPlace (Place n) {
         this.monitoredPlaceName = n.getName();
-        this.monitoredPlaceMajor = n.getMajor();
-        this.monitoredPlaceMinor = n.getMinor();
+        this.monitoredId = n.getId();
     }
 
     public void changeAskMode(boolean state) {

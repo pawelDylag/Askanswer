@@ -1,12 +1,13 @@
 package com.aghacks.askanswer.data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by paweldylag on 25/10/14.
  */
 
-public class Poll {
+public class Poll implements Serializable{
 
     private String question;
     private ArrayList<String> answers;
