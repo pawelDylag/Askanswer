@@ -4,4 +4,6 @@
     <color name="mainColor">#AAAAAA</color>
     <color name="background">#FFFFFF</color>
     <color name="green">#ff2dff44</color>
+    <color name="textWhite">#fffff4f4</color>
+
 </resources>

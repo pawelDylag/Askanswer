@@ -3,6 +3,7 @@ package com.aghacks.askanswer.activities;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,16 +47,19 @@ public class IntroActivity extends ListActivity {
         Intent trackIntent = new Intent(getApplicationContext(), TrackService.class);
         getApplicationContext().startService(trackIntent);
 
+        ListView lv = getListView();
+        LayoutInflater inflater = getLayoutInflater();
+        View header = inflater.inflate(R.layout.header, lv, false);
+        lv.addHeaderView(header, null, false);
 
         adapter = new PlaceAdapter(this,
                 R.layout.place_layout, TrackService.places);
         setListAdapter(adapter);
 
-
     }
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        Place item = (Place) getListAdapter().getItem(position);
+        Place item = (Place) getListAdapter().getItem(position-1);
 
         // TODO: tu nalezy zmienic na pobieranie place z tablicy
         userData.changeMonitoredPlace(item);
