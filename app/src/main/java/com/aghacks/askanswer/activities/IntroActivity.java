@@ -1,5 +1,6 @@
 package com.aghacks.askanswer.activities;
 
+import android.app.DialogFragment;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.widget.ListView;
 
 import com.aghacks.askanswer.R;
 import com.aghacks.askanswer.adapters.PlaceAdapter;
+import com.aghacks.askanswer.fragments.SendPollDialog;
 import com.aghacks.askanswer.http.AskQuestion;
 import com.aghacks.askanswer.http.CurrentQuestion;
 import com.aghacks.askanswer.http.GetBeacon;
@@ -97,15 +99,8 @@ public class IntroActivity extends ListActivity {
         if (id == R.id.action_settings) {
             RegisterBeacon.INSTANCE.request("442023991", "Marian");
             new GetBeacon().request("442023991");
-
-            List<String> answers = new ArrayList<String>();
-            answers.add("a");
-            answers.add("b");
-            answers.add("c");
-            long endtime = System.currentTimeMillis() + 1000 * 60;
-            AskQuestion.INSTANCE.request("442023991", 1, endtime, "Q?", answers);
-
-            SubmitAnswer.INSTANCE.request("442023991", "b");
+            DialogFragment newFragment = SendPollDialog.newInstance();
+            newFragment.show(getFragmentManager(), "dialog");
            // CurrentQuestion.INSTANCE.request("442023991");
             return true;
         }

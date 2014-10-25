@@ -159,6 +159,8 @@ public class MainActivity extends Activity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            TextView question = (TextView) rootView.findViewById(R.id.questionText);
+            question.setText( poll.getQuestion());
             listView = (ListView) rootView.findViewById(R.id.answersListView);
             adapter = new PollViewAdapter(getActivity(), R.layout.poll_answer, poll.getAnswers());
             listView.setAdapter(adapter);
