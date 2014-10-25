@@ -168,7 +168,7 @@ public class MainActivity extends Activity {
                         view.findViewById(R.id.answer_row).setBackgroundColor(getResources().getColor(R.color.green));
                     } else {
                         // TODO: uzupełnić 2 pierwsze dane
-                        AskQuestion.INSTANCE.request("442023991", 1, poll.getLaunchedAt() + poll.getLength(), poll.getQuestion(), poll.getAnswers());
+                        AskQuestion.INSTANCE.request("442023991", 1, poll.getLaunchedAt()+poll.getLength(), poll.getQuestion(), poll.getAnswers());
                         Toast.makeText(getActivity(), "Answer sent: " + i, Toast.LENGTH_SHORT).show();
                         getActivity().getFragmentManager().beginTransaction().remove(thisFragment).commit();
                     }
@@ -181,6 +181,9 @@ public class MainActivity extends Activity {
 
     public void returnToIntroActivity() {
         userData.changeMonitoredPlace(new Place(null, ""));
+        if (pollFragment != null) {
+            pollFragment = null;
+        }
         Intent intent = new Intent(this.getApplicationContext(), IntroActivity.class);
         intent.putExtra("userData", userData);
         startActivity(intent);
