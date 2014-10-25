@@ -3,6 +3,7 @@ package com.aghacks.askanswer.activities;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.aghacks.askanswer.R;
+import com.aghacks.askanswer.adapters.PlaceAdapter;
 import com.aghacks.askanswer.http.AskQuestion;
 import com.aghacks.askanswer.http.CurrentQuestion;
 import com.aghacks.askanswer.http.GetBeacon;
@@ -31,7 +33,7 @@ import com.aghacks.askanswer.data.UserData;
 public class IntroActivity extends ListActivity {
 
 
-    public static ArrayAdapter<String> adapter;
+    public static ArrayAdapter<Place> adapter;
     private UserData userData;
     private Intent trackIntent;
 
