@@ -29,8 +29,10 @@ public class TrackService extends Service {
     private static final String TAG = TrackService.class.getSimpleName();
 
     private static final Region ALL_ESTIMOTE_BEACONS = new Region("regionId", Settings.PROXIMITY_UUID, null, null);
-    private static List<Beacon> currentBeacons = new ArrayList<Beacon>();
+    public static List<Beacon> currentBeacons = new ArrayList<Beacon>();
+    public static List<String> beaconIds = new ArrayList<String>();
     public static Map<String, String> nameMap = new HashMap<String, String>();
+    public static Map<String, String> idMap = new HashMap<String, String>();
     public static ArrayList<String> placeLabel = new ArrayList<String>();
     public static ArrayList<Place> places = new ArrayList<Place>();
     private final BeaconManager beaconManager = new BeaconManager(this);
@@ -60,7 +62,14 @@ public class TrackService extends Service {
                             if(!nameMap.containsKey(key) && Utils.computeAccuracy(beacon) < 3) {
                                 new GetBeacon().request(key);
                             }
+                            beaconIds.add(key);
                         }
+
+                        idMap = new HashMap<String, String>();
+                        for(Map.Entry<String, String> entry : nameMap.entrySet()){
+                            idMap.put(entry.getValue(), entry.getKey());
+                        }
+
                         Iterator it = nameMap.entrySet().iterator();
                         while (it.hasNext()) {
                             Map.Entry pairs = (Map.Entry)it.next();

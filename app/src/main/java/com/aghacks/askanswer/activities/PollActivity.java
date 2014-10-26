@@ -14,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -30,6 +32,8 @@ import com.aghacks.askanswer.http.RegisterBeacon;
 import com.aghacks.askanswer.services.TrackService;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class PollActivity extends Activity {
 
@@ -58,15 +62,14 @@ public class PollActivity extends Activity {
         });
 
         EditText editName = (EditText) findViewById(R.id.editName);
-        EditText chooseBeacons = (EditText) findViewById(R.id.beacon_spinner);
-        chooseBeacons.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-
-            }
-        });
-
+        Spinner chooseBeacons = (Spinner) findViewById(R.id.beacon_spinner);
+        final List<String> list = new LinkedList<String>();
+        list.addAll(TrackService.beaconIds);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        chooseBeacons.setAdapter(dataAdapter);
 
         // TODO: Dodac zapisywanie polli i pobieranie z pliku
         adapter = new YourPolls(this,

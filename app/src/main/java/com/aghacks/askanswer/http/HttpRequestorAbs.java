@@ -49,11 +49,11 @@ public abstract class HttpRequestorAbs {
 
             @Override
             protected void onPostExecute(HttpResponse httpResponse) {
-                HttpEntity entity = httpResponse.getEntity();
                 try {
+                    HttpEntity entity = httpResponse.getEntity();
                     String resp = EntityUtils.toString(entity);
                     processResponse(resp);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
