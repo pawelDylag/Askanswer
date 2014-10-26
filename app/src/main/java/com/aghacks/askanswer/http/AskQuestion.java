@@ -6,16 +6,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AskQuestion extends HttpRequestorAbs {
     public static AskQuestion INSTANCE = new AskQuestion();
 
-    public void request(String id, int pid, long endtime, String question, List<String> answersList) {
+    public void request(String id, int pid, long endtime, String question, ArrayList<String> answersList) {
         String url = BASE_URL+"ask_question/";
         JSONObject parameters = new JSONObject();
         JSONArray answers = new JSONArray();
         try {
+            Log.d("JSONToSEND", id+ "");
             parameters.put("id", id);
             parameters.put("pid", pid);
             parameters.put("endtime", endtime);

@@ -70,7 +70,7 @@ public class SendPollDialog extends DialogFragment {
                     answers.add(d.getText().toString());
                 }
 
-                long endtime = System.currentTimeMillis() + 1000 * 60;
+                long endtime = System.currentTimeMillis() + 1000 * 15;
                 Poll poll = new Poll(questionEdit.getText().toString(), answers, endtime, 0);
                 Intent intent = new Intent("poll");
                 intent.putExtra("poll", poll);

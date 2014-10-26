@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.aghacks.askanswer.R;
 import com.aghacks.askanswer.adapters.PlaceAdapter;
@@ -27,6 +28,8 @@ import com.aghacks.askanswer.adapters.PollViewAdapter;
 import com.aghacks.askanswer.adapters.YourPolls;
 import com.aghacks.askanswer.data.Poll;
 import com.aghacks.askanswer.fragments.SendPollDialog;
+import com.aghacks.askanswer.http.AskQuestion;
+import com.aghacks.askanswer.http.EndQuestion;
 import com.aghacks.askanswer.http.GetBeacon;
 import com.aghacks.askanswer.http.RegisterBeacon;
 import com.aghacks.askanswer.services.TrackService;
@@ -34,14 +37,17 @@ import com.aghacks.askanswer.services.TrackService;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class PollActivity extends Activity {
 
     private String name;
-    private String beaconId;
-    private EditText beaconChooser;
+    static  String beaconId;
+    private int pollCounter;
     private YourPolls adapter;
     private EditText nameText;
+    private Spinner chooseBeacons;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +56,10 @@ public class PollActivity extends Activity {
         ListView lv = (ListView) findViewById(R.id.pollListView);
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
                 new IntentFilter("poll"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(sendPollReceiver,
+                new IntentFilter("toSend"));
+        pollCounter = 0;
+        chooseBeacons = (Spinner) findViewById(R.id.beacon_spinner);
 
         Button addPoll = (Button) findViewById(R.id.addButton);
         addPoll.setOnClickListener(new View.OnClickListener() {
@@ -61,15 +71,27 @@ public class PollActivity extends Activity {
             }
         });
 
-        EditText editName = (EditText) findViewById(R.id.editName);
+       nameText = (EditText) findViewById(R.id.editName);
 
-        Spinner chooseBeacons = (Spinner) findViewById(R.id.beacon_spinner);
         final List<String> list = new LinkedList<String>();
         list.addAll(TrackService.beaconIds);
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         chooseBeacons.setAdapter(dataAdapter);
+        chooseBeacons.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                beaconId = chooseBeacons.getSelectedItem().toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+
 
         // TODO: Dodac zapisywanie polli i pobieranie z pliku
         adapter = new YourPolls(this,
@@ -88,6 +110,38 @@ public class PollActivity extends Activity {
 
         }
     };
+
+    private BroadcastReceiver sendPollReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Poll message = (Poll) intent.getSerializableExtra("poll");
+            if (registerBeacon()) {
+                AskQuestion.INSTANCE.request(beaconId, pollCounter, message.getLength(), message.getQuestion(), message.getAnswers());
+                getStats();
+            } else Toast.makeText(context, "Fill name and beacon.", Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    public boolean registerBeacon () {
+        if (chooseBeacons.getSelectedItem() != null) {
+            String s = (String) chooseBeacons.getSelectedItem();
+            if (nameText.getText().toString().length() != 0) {
+                String n = nameText.getText().toString();
+                RegisterBeacon.INSTANCE.request(s, n);
+                return true;
+            }
+        } return false;
+    }
+
+    public void getStats() {
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                EndQuestion.INSTANCE.request(beaconId, pollCounter);
+                pollCounter++;
+            }
+        }, 15000);
+    }
 
 
     @Override

@@ -1,6 +1,8 @@
 package com.aghacks.askanswer.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.aghacks.askanswer.R;
+import com.aghacks.askanswer.data.App;
 import com.aghacks.askanswer.data.Poll;
 import com.aghacks.askanswer.http.AskQuestion;
 
@@ -55,7 +58,10 @@ public class YourPolls extends ArrayAdapter<Poll> {
             sendButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    AskQuestion.INSTANCE.request("442023991", 1, polls.get(position).getLength(), polls.get(position).getQuestion(), polls.get(position).getAnswers());
+                    Intent intent = new Intent("toSend");
+                    intent.putExtra("poll", polls.get(position));
+                    LocalBroadcastManager.getInstance(App.getObj()).sendBroadcast(intent);
+
                 }
             });
             if (tt != null){

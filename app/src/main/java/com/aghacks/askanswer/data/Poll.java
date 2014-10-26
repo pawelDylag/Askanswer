@@ -36,7 +36,7 @@ public class Poll implements Serializable{
                 answers.add(jsonAnswers.get(i).toString());
             }
             this.answers = answers;
-            this.length = 1000 * 30;
+            this.length = 1000 * 15;
             this.launchedAt = System.currentTimeMillis();
             this.done = false;
         } catch (JSONException e) {
